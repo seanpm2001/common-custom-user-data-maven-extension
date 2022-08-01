@@ -134,13 +134,4 @@ final class CustomGradleEnterpriseConfig {
     });
   }
 
-  //TODO
-  void configureBuildCacheSpecificKeysInMap(BuildCacheApi buildCache) {
-
-  }
-
-  //TODO
-  void configureBuildCacheSeveralExecutionId(BuildCacheApi buildCache) {
-
-  }
 }
