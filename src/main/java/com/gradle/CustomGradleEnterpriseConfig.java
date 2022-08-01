@@ -2,10 +2,8 @@ package com.gradle;
 
 import com.gradle.maven.extension.api.GradleEnterpriseApi;
 import com.gradle.maven.extension.api.cache.BuildCacheApi;
-import com.gradle.maven.extension.api.scan.BuildScanApi;
 import com.gradle.maven.extension.api.cache.MojoMetadataProvider;
-
-import java.net.URI;
+import com.gradle.maven.extension.api.scan.BuildScanApi;
 
 /**
  * Provide standardized Gradle Enterprise configuration.
@@ -32,9 +30,17 @@ final class CustomGradleEnterpriseConfig {
     buildCache.getLocal().setEnabled(true);
     buildCache.getRemote().setEnabled(false);
 
-    //TODO test runtime normalization
+    ignoreTimestampInMetaInf(buildCache);
     configureBuildCacheAvroPlugin(buildCache);
     configureBuildCacheEnforcerPlugin(buildCache);
+  }
+
+  void ignoreTimestampInMetaInf(BuildCacheApi buildCache) {
+    buildCache.registerNormalizationProvider(context -> context
+            .configureRuntimeClasspathNormalization(
+                    normalization -> normalization
+                            .configureMetaInf(metaInf -> metaInf.setIgnoredAttributes("Build-Time"))
+            ));
   }
 
   void configureBuildCacheAvroPlugin(BuildCacheApi buildCache) {
