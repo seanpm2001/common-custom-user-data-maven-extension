@@ -43,27 +43,35 @@ final class CustomGradleEnterpriseConfig {
         context.inputs(inputs -> inputs
                         .fileSet("sourceDirectory", fileSet -> fileSet.includesProperty("includes").excludesProperty("excludes"))
                         .fileSet("testSourceDirectory", fileSet -> fileSet.includesProperty("testIncludes").excludesProperty("testExcludes"))
-                        .properties(
-                                "createOptionalGetters",
-                                "createSetters",
-                                "enableDecimalLogicalType",
-                                "gettersReturnOptional",
-                                "optionalGettersForNullableFieldsOnly",
-                                "stringType",
-                                "imports",
-                                "fieldVisibility",
-                                "customConversions",
-                                "customLogicalTypeFactories",
-                                "templateDirectory",
-                                "velocityToolsClassesNames"
-                        )
-                        .ignore(
-                                "project"
-                        )
+                        .properties(getAvroPluginInputProperties())
+                        .ignore(getAvroPluginInputIgnores())
                 )
                 .outputs(outputs -> outputs.directory("outputDirectory").directory("testOutputDirectory").cacheable("generates consistent outputs for declared inputs"));
       });
     });
+  }
+
+  String[] getAvroPluginInputProperties() {
+    return new String[]{
+            "createOptionalGetters",
+            "createSetters",
+            "enableDecimalLogicalType",
+            "gettersReturnOptional",
+            "optionalGettersForNullableFieldsOnly",
+            "stringType",
+            "imports",
+            "fieldVisibility",
+            "customConversions",
+            "customLogicalTypeFactories",
+            "templateDirectory",
+            "velocityToolsClassesNames"
+    };
+  }
+
+  String[] getAvroPluginInputIgnores() {
+    return new String[]{
+            "project"
+    };
   }
 
   void configureBuildCacheEnforcerPlugin(BuildCacheApi buildCache) {
