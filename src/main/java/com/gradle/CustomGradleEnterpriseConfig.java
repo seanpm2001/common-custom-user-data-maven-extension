@@ -37,9 +37,33 @@ final class CustomGradleEnterpriseConfig {
     configureBuildCacheEnforcerPlugin(buildCache);
   }
 
-  //TODO
   void configureBuildCacheAvroPlugin(BuildCacheApi buildCache) {
-
+    buildCache.registerMojoMetadataProvider(context -> {
+      context.withPlugin("avro-maven-plugin", () -> {
+        context.inputs(inputs -> inputs
+                        .fileSet("sourceDirectory", fileSet -> fileSet.includesProperty("includes").excludesProperty("excludes"))
+                        .fileSet("testSourceDirectory", fileSet -> fileSet.includesProperty("testIncludes").excludesProperty("testExcludes"))
+                        .properties(
+                                "createOptionalGetters",
+                                "createSetters",
+                                "enableDecimalLogicalType",
+                                "gettersReturnOptional",
+                                "optionalGettersForNullableFieldsOnly",
+                                "stringType",
+                                "imports",
+                                "fieldVisibility",
+                                "customConversions",
+                                "customLogicalTypeFactories",
+                                "templateDirectory",
+                                "velocityToolsClassesNames"
+                        )
+                        .ignore(
+                                "project"
+                        )
+                )
+                .outputs(outputs -> outputs.directory("outputDirectory").directory("testOutputDirectory").cacheable("generates consistent outputs for declared inputs"));
+      });
+    });
   }
 
   void configureBuildCacheEnforcerPlugin(BuildCacheApi buildCache) {
